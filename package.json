@@ -20,6 +20,7 @@
     "nodemon": "^2.0.6"
   },
   "dependencies": {
+    "bootstrap": "^3.4.1",
     "global": "^4.4.0",
     "nvm": "^0.0.4"
   }
