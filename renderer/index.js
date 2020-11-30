@@ -4,6 +4,3 @@ const { ipcRenderer } = require('electron')
 document.getElementById('button-1').addEventListener('click', () => {
   ipcRenderer.send('open-button')
 })
-
-
-// console.log(6666)

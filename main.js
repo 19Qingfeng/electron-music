@@ -5,29 +5,35 @@ const { app, BrowserWindow, ipcMain } = require("electron")
   主进程 只有该文件下可以使用BrowserWindow创建渲染进程
  */
 
+class AppWindow extends BrowserWindow {
+  constructor(config,fileLocation) {
+    const baseConfig = {
+      width: 800,
+      height: 600,
+      show: false,
+      webPreferences: {
+        nodeIntegration: true
+      }
+    }
+    const finallyConfig = { ...baseConfig ,...config}
+    super(finallyConfig)
+    this.loadFile(fileLocation)
+    this.once('ready-to-show', () => {
+      this.show()
+    })
+  }
+}
+
+
 app.on('ready', () => {
-  const indexWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-  indexWindow.loadFile('./renderer/index.html')
+  const indexWindow = new AppWindow({},'./renderer/index.html')
   ipcMain.on('open-button', (event) => {
-    createAddWindow()
+    new AppWindow({
+      width: 500,
+      height: 400,
+      parent:indexWindow
+    },'./renderer/add.html')
   })
-  function createAddWindow() {
-    const addWindow = new BrowserWindow({
-        width: 500,
-        height: 400,
-        webPreferences: {
-          nodeIntegration: true
-        },
-        parent:indexWindow
-      })
-      addWindow.loadFile('./renderer/add.html')
-    }
 })
 
 
