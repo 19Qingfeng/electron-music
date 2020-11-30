@@ -34,19 +34,17 @@ app.on('ready', () => {
       parent:indexWindow
     },'./renderer/add.html')
   })
-  ipcMain.on('open-music-file', (event, arg) => {
-    dialog.showOpenDialog({
+  ipcMain.on('open-music-file', async (event, arg) => {
+   const files =  await dialog.showOpenDialog({
       filters: [
-        { name: 'Music', extensions: ['mp3'] },
+        // { name: 'Music', extensions: ['mp3'] },
       ],
       properties: [
         'openFile',
         'multiSelections'
       ],
-    }, (files) => {
-        // 选中的文件的路径
-        console.log(files)
-    })
+   })
+    console.log(files,'fiels')
   })
 })
 
