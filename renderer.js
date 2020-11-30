@@ -4,3 +4,11 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
+
+// render process can use node API or DOM API
+
+alert(process.versions.node)
+
+window.addEventListener('DOMContentLoaded', () => {
+  alert('DOM Load')
+})
