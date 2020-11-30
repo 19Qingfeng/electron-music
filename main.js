@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron") 
+const { app, BrowserWindow, ipcMain, dialog } = require("electron") 
 
 /* 
   该文件下的都是main Process
@@ -33,6 +33,20 @@ app.on('ready', () => {
       height: 400,
       parent:indexWindow
     },'./renderer/add.html')
+  })
+  ipcMain.on('open-music-file', (event, arg) => {
+    dialog.showOpenDialog({
+      filters: [
+        { name: 'Music', extensions: ['mp3'] },
+      ],
+      properties: [
+        'openFile',
+        'multiSelections'
+      ],
+    }, (files) => {
+        // 选中的文件的路径
+        console.log(files)
+    })
   })
 })
 
