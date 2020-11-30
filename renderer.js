@@ -7,8 +7,16 @@
 
 // render process can use node API or DOM API
 
-alert(process.versions.node)
+const { ipcRenderer } = require("electron") 
 
+// 通信机制：事件机制 通过ipcRenderer向main发送事件
 window.addEventListener('DOMContentLoaded', () => {
-  alert('DOM Load')
+  // 事件名称 内容
+  ipcRenderer.send('message', 'Hello From Rendered')
+  ipcRenderer.on('reply', (event, arg) => {
+    console.log(arg,'11111111')
+    document.getElementById('message').innerHTML = arg
+  })
 })
+
+
