@@ -10,11 +10,27 @@ app.on('ready', () => {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration:true
+      nodeIntegration: true
     }
   })
   indexWindow.loadFile('./renderer/index.html')
+  ipcMain.on('open-button', (event) => {
+    createAddWindow()
+  })
+  function createAddWindow() {
+    const addWindow = new BrowserWindow({
+        width: 500,
+        height: 400,
+        webPreferences: {
+          nodeIntegration: true
+        },
+        parent:indexWindow
+      })
+      addWindow.loadFile('./renderer/add.html')
+    }
 })
+
+
 
 
 // electron完全加载触发ready事件
