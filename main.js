@@ -26,27 +26,34 @@ class AppWindow extends BrowserWindow {
 
 
 app.on('ready', () => {
-  const indexWindow = new AppWindow({},'./renderer/index.html')
+  const indexWindow = new AppWindow({}, './renderer/index.html')
+  // 调试主进程
+  // indexWindow.webContents.openDevTools({mode:'right'})
+  
   ipcMain.on('open-button', (event) => {
-    new AppWindow({
+    const dialogWindow = new AppWindow({
       width: 500,
       height: 400,
       parent:indexWindow
-    },'./renderer/add.html')
+    }, './renderer/add.html')
+  dialogWindow.webContents.openDevTools({ mode: 'right' })
   })
   ipcMain.on('open-music-file', async (event, arg) => {
-   const files =  await dialog.showOpenDialog({
+   const res =  await dialog.showOpenDialog({
       filters: [
-        // { name: 'Music', extensions: ['mp3'] },
+        { name: 'Music', extensions: ['mp3'] },
       ],
       properties: [
         'openFile',
         'multiSelections'
       ],
    })
-    console.log(files,'fiels')
+    if (!res.canceled && res.filePaths) {
+      event.sender.send('selected-file',res.filePaths)
+    }
   })
 })
+
 
 
 
