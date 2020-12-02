@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron") 
+const Store = require('electron-store');
 
 /* 
   该文件下的都是main Process
@@ -52,6 +53,30 @@ app.on('ready', () => {
       event.sender.send('selected-file',res.filePaths)
     }
   })
+
+  /* store */
+  // 创建实例
+  const store = new Store('wanghaoyu');
+  // set 设置
+  store.set('unicorn', '🦄');
+  // get 获取
+  console.log(store.get('unicorn'));
+  //=> '🦄'
+
+  // Use dot-notation to access nested properties
+  // 设置多层数据结构 foo.bar 为true
+  store.set('foo.bar', true);
+  console.log(store.get('foo'));
+  //=> {bar: true}
+
+  store.delete('unicorn');
+  console.log(store.get('unicorn'));
+  //=> undefined
+
+
+  // store 存在哪里 (存放文件路径)
+  console.log(app.getPath('userData'))
+
 })
 
 
