@@ -29,8 +29,16 @@ class AppWindow extends BrowserWindow {
 }
 
 
+/* 
+  electron通信 on 和 send 只能通讯到对应的模块中
+  比如 indexWindow.send('getTracks') 只有indexWindow中的on事件可以通过ipcRenderer.on监听到getTracks事件
+*/
+
 app.on('ready', () => {
   const indexWindow = new AppWindow({}, './renderer/index.html')
+  indexWindow.webContents.on('did-finish-load',() => {
+    indexWindow.send('getTracks',myStore.getTracks())
+  })
   // 调试主进程
   // indexWindow.webContents.openDevTools({mode:'right'})
   
@@ -59,6 +67,7 @@ app.on('ready', () => {
   // add-tracks事件
   ipcMain.on('add-tracks',(event,tracks) => {
     const updateTracks = myStore.addTracks(tracks).getTracks()
+    // 添加之后给主窗口发送事件 
   })
 
 })

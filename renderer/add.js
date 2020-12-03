@@ -16,9 +16,10 @@ $('add-music').addEventListener('click', () => {
 const renderListHTML = (paths) => {
   const ele = $('musicList')
   const html = paths.reduce((pre,cur) => { 
-    pre = `<li class='list-group-item'>${path.basename(cur)}</li>`
+    pre = pre + `<li class='list-group-item' style="margin-bottom:5px;">${path.basename(cur)}</li>`
     return pre
   }, "")
+  console.log(html,'html')
   ele.innerHTML = `<ul class='list-group'>${html}</ul>`
 }
 
