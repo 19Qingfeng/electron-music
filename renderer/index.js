@@ -15,8 +15,8 @@ const renderListHtml = (tracks) => {
         <b>${track.fileName}</b>
       </div>
       <div class='col-2'>
-        <i class="iconfont icon-start mr-3"></i>
-        <i class="iconfont icon-cangpeitubiao_shanchu mr-2"></i>
+        <i data-id="${track.id}" class="iconfont icon-start mr-3 hover-icon"></i>
+        <i data-id="${track.id}" class="iconfont icon-cangpeitubiao_shanchu mr-2 hover-icon"></i>
       </div>
     </li>`
     return html
@@ -25,7 +25,24 @@ const renderListHtml = (tracks) => {
   tracksList.innerHTML = tracks.length ? `<ul class='list-group'>${tracksHTML}</ul>` : emptyHTML
 }
 
+let allTracks = []
+
 ipcRenderer.on('getTracks',(event,tracks) => {
-  console.log(tracks,'tracks')
+  allTracks = tracks
   renderListHtml(tracks)
+})
+
+const audio = new Audio()
+
+$('tracksList').addEventListener('click',(event) => {
+  event.preventDefault()
+  const { dataset , classList } = event.target
+  if(dataset && dataset.id && classList.contains('icon-start')) {
+    const music = allTracks.find(i => i.id == dataset.id)
+    if(music && music.path) {
+      audio.src = music.path
+      audio.play()
+      classList.replace('icon-start','icon-stop')
+    }
+  }
 })

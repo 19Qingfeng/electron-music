@@ -19,7 +19,6 @@ const renderListHTML = (paths) => {
     pre = pre + `<li class='list-group-item' style="margin-bottom:5px;">${path.basename(cur)}</li>`
     return pre
   }, "")
-  console.log(html,'html')
   ele.innerHTML = `<ul class='list-group'>${html}</ul>`
 }
 
