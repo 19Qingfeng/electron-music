@@ -81,3 +81,32 @@ $("tracksList").addEventListener("click", (event) => {
     ipcRenderer.send('delete-tracks',dataset.id)
   }
 });
+
+const renderPlayerHTML = (name,duration) => {
+  const player =$('player-status')
+  const html = `
+      <div class="col font-weight-bold">${name}</div>
+      <div class="col">
+        <span id="current-seeker">00:00</span>
+        /
+        <span>${duration}</span>
+      </div>
+  `
+  player.innerHTML = html
+}
+
+const updateProgressHTML = (duration) => {
+  const progressEle = $('current-seeker')
+  progressEle.innerHTML = duration
+}
+
+
+/* 音频元数据加载完成事件 开始渲染播放器(开始播放)事件 */
+audio.addEventListener('loadedmetadata',() => {
+  renderPlayerHTML(music.fileName,audio.duration)
+})
+
+/* 当currentTime更新时会触发timeupdate事件。监听播放时常改变事件 */
+audio.addEventListener('timeupdate',() => {
+  updateProgressHTML(audio.currentTime)
+})
