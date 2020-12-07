@@ -41,14 +41,13 @@ app.on('ready', () => {
   })
   // 调试主进程
   // indexWindow.webContents.openDevTools({mode:'right'})
-  
+  let dialogWindow
   ipcMain.on('open-button', (event) => {
-    const dialogWindow = new AppWindow({
+    dialogWindow = new AppWindow({
       width: 500,
       height: 400,
       parent:indexWindow
     }, './renderer/add.html')
-  dialogWindow.webContents.openDevTools({ mode: 'right' })
   })
   ipcMain.on('open-music-file', async (event, arg) => {
    const res =  await dialog.showOpenDialog({
@@ -64,12 +63,20 @@ app.on('ready', () => {
       event.sender.send('selected-file',res.filePaths)
     }
   })
+  // 关闭add窗口
+  ipcMain.on('closeAdd',() => {
+    dialogWindow.close()
+  })
   // add-tracks事件
   ipcMain.on('add-tracks',(event,tracks) => {
     const updateTracks = myStore.addTracks(tracks).getTracks()
     // 添加之后给主窗口发送事件 
   })
-
+  // 删除音乐事件
+  ipcMain.on('delete-tracks',(event,id) => {
+    const tracks = myStore.delete(id).getTracks()
+    indexWindow.send('getTracks',tracks)
+  })
 })
 
 
@@ -93,7 +100,7 @@ app.on('ready', () => {
 //   // 运行在Main上的事件模块 通过事件监听机制实现通信
 //   ipcMain.on('message', (event,arg) => {
 //     // event 事件对象 arg 发送内容
-//     console.log(arg, 'arg')
+//     console.log(arg, 'a
 //     // event.sender 发送者 send()方法 发送事件回去
 //     event.sender.send('reply', 'hello from main')
 //     // 同理可以使用mainWindow发送信息 它和event.sender发送一个意思

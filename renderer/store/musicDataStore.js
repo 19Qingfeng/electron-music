@@ -30,6 +30,14 @@ class DataStore extends Store {
     this.tracks = [ ...this.tracks, ...tracksWithProps ]
     return this.saveTracks()
   }
+  delete(id) {
+    const delTrackIndex = this.tracks.findIndex(track => track.id === id)
+    if(delTrackIndex !== -1) {
+      this.tracks.splice(delTrackIndex,1)
+      this.saveTracks()
+    }
+    return this
+  }
 }
 
 module.exports = DataStore
