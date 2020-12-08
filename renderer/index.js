@@ -1,4 +1,4 @@
-const { $ } = require("./helper");
+const { $ , converDuration} = require("./helper");
 // 主窗口
 const { ipcRenderer } = require("electron");
 
@@ -85,28 +85,35 @@ $("tracksList").addEventListener("click", (event) => {
 const renderPlayerHTML = (name,duration) => {
   const player =$('player-status')
   const html = `
-      <div class="col font-weight-bold">${name}</div>
+      <div class="col font-weight-bold">正在播放：${name}</div>
       <div class="col">
         <span id="current-seeker">00:00</span>
         /
-        <span>${duration}</span>
+        <span>${converDuration(duration)}</span>
       </div>
   `
   player.innerHTML = html
 }
 
-const updateProgressHTML = (duration) => {
+const updateProgressHTML = (currentTime,duration) => {
+  // 计算播放进度
+  const progress = Math.floor(currentTime/duration * 100)
+  // 百分比
+  const barEle = $('player-progress')
+  barEle.innerHTML =  `${progress}% 完成`
+  barEle.style.width = `${progress}%`
+
   const progressEle = $('current-seeker')
-  progressEle.innerHTML = duration
+  progressEle.innerHTML = converDuration(currentTime)
 }
 
 
-/* 音频元数据加载完成事件 开始渲染播放器(开始播放)事件 */
+/* 音频元数据加载完成事件 开始渲染播放器(开始播放之前)事件 */
 audio.addEventListener('loadedmetadata',() => {
   renderPlayerHTML(music.fileName,audio.duration)
 })
 
 /* 当currentTime更新时会触发timeupdate事件。监听播放时常改变事件 */
 audio.addEventListener('timeupdate',() => {
-  updateProgressHTML(audio.currentTime)
+  updateProgressHTML(audio.currentTime,audio.duration)
 })

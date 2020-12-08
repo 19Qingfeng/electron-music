@@ -14,7 +14,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // 事件名称 内容
   ipcRenderer.send('message', 'Hello From Rendered')
   ipcRenderer.on('reply', (event, arg) => {
-    console.log(arg,'11111111')
     document.getElementById('message').innerHTML = arg
   })
 })
